@@ -30,7 +30,7 @@ Gen.check_add = function( cards, gui_num, eye )
     }
     m[ key ] = true;
     for(let i=0;i<9;i++){
-        if(cards[i]>4){
+        if(cards[i]>4){//TODO:4如何来的
             return true;
         } 
     }
@@ -39,6 +39,7 @@ Gen.check_add = function( cards, gui_num, eye )
     return true;
 };
 
+//把成型的牌去掉某张后，存表。
 Gen.parse_table_sub = function( cards, num, eye ) 
 {
 
@@ -74,7 +75,7 @@ Gen.parse_table = function( cards, eye )
 
 Gen.gen_111_3 = function( cards, level, eye ) 
 {
-    for ( let i = 0; i < 16; i++ )
+    for ( let i = 0; i < 16; i++ )//9个3，7个111
     {
         if(i<=8){
             if(cards[i]>3){
@@ -83,6 +84,7 @@ Gen.gen_111_3 = function( cards, level, eye )
             cards[i]+=3;
         }else{
             let index=i-9;
+            //5是如何来的 如果有 444，再出现 234 345 456，就是一个错误的组合
             if (cards[index] > 5 || cards[index + 1] > 5 || cards[index + 2] > 5 ){
                 continue;
             }
@@ -91,9 +93,10 @@ Gen.gen_111_3 = function( cards, level, eye )
             cards[index + 2] += 1
         }
         this.parse_table(cards,eye);
-        if (level < 4) {
+        if (level < 4) {//3*4 + 2(将) = 14？
             this.gen_111_3(cards, level + 1, eye);
         }
+        //回溯
         if (i <= 8 ){
             cards[i] -= 3
         } else {

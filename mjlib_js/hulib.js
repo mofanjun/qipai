@@ -10,10 +10,10 @@ function _init()
 {
     //需要初始化多个对象
     ProbabilityItemTable = { array_num : 0, m_num : [ 0, 0, 0, 0 ], m : [] };
-    for( let i = 0; i < 4; i ++ )
+    for( let i = 0; i < 4; i ++ )//万筒条字
     {
         ProbabilityItemTable.m[ i ] = [];
-        for( let j = 0; j < 5; j ++ )
+        for( let j = 0; j < 5; j ++ )//0财神1财神...
         {
             var  ProbabilityItem = { eye : false, gui_num : 0 };
             ProbabilityItemTable.m[ i ].push( ProbabilityItem );
@@ -35,7 +35,13 @@ let HuLib = module.exports;
 //     this.gui_index2 = 32;
 //     _init();
 // };
-
+/**
+ * 
+ * @argument: cards手牌
+ * @argument: cur_card 第14张
+ * @argument: gui_1 财神1？
+ * @argument: gui_2 财神2？
+ */
 HuLib.get_hu_info = function( cards, cur_card,gui_1,gui_2)
 {
     _init();
@@ -149,19 +155,22 @@ HuLib.check_probability_sub = function( ptbl, eye, gui_num, level, max_level )
 
 HuLib._split = function( cards, gui_num, ptbl )
 {
-
+    //万
     if ( !this._split_color( cards, gui_num, 0, 0, 8, true, ptbl ) )
     {
         return false;
     }
+    //筒
     if ( !this._split_color( cards, gui_num, 1, 9, 17, true, ptbl ) )
     {
         return false;
     }
+    //条
     if ( !this._split_color(cards, gui_num, 2, 18, 26, true, ptbl ) )
     {
         return false;
     }
+    //字
     if ( !this._split_color(cards, gui_num, 3, 27, 33, false, ptbl ) )
     {
         return false;
@@ -190,6 +199,9 @@ HuLib._split_color = function( cards, gui_num, color, min, max, chi, ptbl )
     return true;
 };
 
+/**
+ * @description:配上财神能胡的可能性,这里有问题 如果财神大于4张 那么无法检测
+ */
 HuLib.list_probability = function( color, gui_num, num, key, chi, ptbl )
 {
     let find = false
@@ -198,6 +210,7 @@ HuLib.list_probability = function( color, gui_num, num, key, chi, ptbl )
     for ( let i = 0; i <= gui_num; i++ )
     {
         let eye = false;
+        //1.余0-3n 2.余1-不能胡 3.余2-带将
         let yu = ( num + i ) % 3;
         if ( yu == 1 )
         {
@@ -207,6 +220,7 @@ HuLib.list_probability = function( color, gui_num, num, key, chi, ptbl )
         {
             eye = true;
         }
+        //find如果找到 那么往里面配偶数的鬼，必定也能胡
         if ( find || MTableMgr.check( key, i, eye, chi ) )
         {
             let item = ptbl.m[ anum ][ ptbl.m_num[ anum ] ];

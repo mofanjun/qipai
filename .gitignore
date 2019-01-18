@@ -9,3 +9,5 @@
 *.suo
 *.log
 *.pch
+#忽略生成表的目录
+/mjlib_js/tbl/
